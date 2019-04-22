@@ -1,8 +1,5 @@
 // domzad8laba.cpp : Defines the entry point for the console application.
 //
-
-#include "stdafx.h"
-
 #include "stdafx.h"
 #include "iostream"
 #include "string"
@@ -64,14 +61,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	setlocale(LC_ALL, "Russian");
 	Money M, K;
 	int x, y, z, s;
-	cout<<"\nÂâåäèòå a.ìîíåòó': ";cin>>x;
-	cout<<"Ââåäèòå a.êîïååê': ";cin>>y;
+	cout<<"\nÃ‚Ã¢Ã¥Ã¤Ã¨Ã²Ã¥ a.Ã¬Ã®Ã­Ã¥Ã²Ã³': ";cin>>x;
+	cout<<"Ã‚Ã¢Ã¥Ã¤Ã¨Ã²Ã¥ a.ÃªÃ®Ã¯Ã¥Ã¥Ãª': ";cin>>y;
 	M.set(x,y);
-	cout<<"Ââåäèòå b.ìîíåòó': ";cin>>z;
-	cout<<"Ââåäèòå b.êîïååê': ";cin>>s;
+	cout<<"Ã‚Ã¢Ã¥Ã¤Ã¨Ã²Ã¥ b.Ã¬Ã®Ã­Ã¥Ã²Ã³': ";cin>>z;
+	cout<<"Ã‚Ã¢Ã¥Ã¤Ã¨Ã²Ã¥ b.ÃªÃ®Ã¯Ã¥Ã¥Ãª': ";cin>>s;
 	K.set(z,s);
-	cout << "\nÑëîæåíèå ðàâíî : " << M.getRubley()+K.getRubley()<< ","<< M.getKopeek()+K.getKopeek()<< endl;
-	cout << "\nÂû÷èòàíèå ðàâíî: " << M.getRubley()-K.getRubley()<< ","<< M.getKopeek()-K.getKopeek()<< endl;
+	cout << "\nÃ‘Ã«Ã®Ã¦Ã¥Ã­Ã¨Ã¥ Ã°Ã Ã¢Ã­Ã® : " << M.getRubley()+K.getRubley()<< ","<< M.getKopeek()+K.getKopeek()<< endl;
+	cout << "\nÃ‚Ã»Ã·Ã¨Ã²Ã Ã­Ã¨Ã¥ Ã°Ã Ã¢Ã­Ã®: " << M.getRubley()-K.getRubley()<< ","<< M.getKopeek()-K.getKopeek()<< endl;
 	system ("pause");
 	return 0;
 }
