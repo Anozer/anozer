@@ -1,4 +1,4 @@
-// 14labaDZ.cpp: îïðåäåëÿåò òî÷êó âõîäà äëÿ êîíñîëüíîãî ïðèëîæåíèÿ.
+// 14labaDZ.cpp: Ã®Ã¯Ã°Ã¥Ã¤Ã¥Ã«Ã¿Ã¥Ã² Ã²Ã®Ã·ÃªÃ³ Ã¢ÃµÃ®Ã¤Ã  Ã¤Ã«Ã¿ ÃªÃ®Ã­Ã±Ã®Ã«Ã¼Ã­Ã®Ã£Ã® Ã¯Ã°Ã¨Ã«Ã®Ã¦Ã¥Ã­Ã¨Ã¿.
 //
 
 #include "stdafx.h"
@@ -11,25 +11,25 @@
 using namespace std;
 
 DWORD WINAPI thread2(LPVOID);
-size_t a;
-size_t b;
+size_t anozer;
+size_t dor;
 int main()
 {
-  ifstream x("dz14_dune.txt",ios::in|ios::_Nocreate);
-  string y;
-  while(x >> y) ++a;
-  cout <<"Slova dune"<< a << endl;
+  ifstream i("dz14_dune.txt",ios::in|ios::_Nocreate);
+  string u;
+  while(i >> u) ++anozer;
+  cout <<"Slova dune"<< anozer << endl;
   HANDLE thread = CreateThread(NULL,0,thread2,NULL, 0, NULL);
-  cout <<"Obshee kolichestvo slov "<< a+b << endl;
+  cout <<"Obshee kolichestvo slov "<< anozer+dor << endl;
   _getch();
   return 0;
 }
 
 DWORD WINAPI thread2(LPVOID t)
 {
-  std::ifstream x("dz14_karenina.txt",ios::in|ios::_Nocreate);
-  std::string y;
-  while(x >> y) ++b;
-  cout <<"Slova katerina"<< b << endl;
+  std::ifstream i("dz14_karenina.txt",ios::in|ios::_Nocreate);
+  std::string u;
+  while(i >> u) ++dor;
+  cout <<"Slova katerina"<< dor << endl;
   return 0;
 }
