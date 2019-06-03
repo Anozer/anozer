@@ -1,5 +1,5 @@
 // 11zadaniezolotoeyayzo.cpp : Defines the entry point for the console application.
-//гнкнрне ъижн
+//y delal 11labu s Innokentevoy Iroy u nee egg standart u menya zolotoy
 
 #include "stdafx.h"
 #include "iostream"
