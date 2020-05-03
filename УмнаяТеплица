@@ -1,0 +1,114 @@
+#include <ESP8266WiFi.h>
+#include <FirebaseArduino.h>
+#include "DHT.h"
+// тип датчика DHT
+#define DHTTYPE DHT11
+#include <OneWire.h>
+ // библиотека для работы с датчиком DS18B20
+#include <DallasTemperature.h>
+// сигнальный провод датчика
+#define ONE_WIRE_BUS 5
+// Set these to run example.
+#define FIREBASE_HOST "idor2-1f27f.firebaseio.com"
+#define FIREBASE_AUTH "GlmgNvVOYJbXfnUfmy1eLeZH8CrEUs9r0mzlnQ4L"
+#define WIFI_SSID "iDor"
+#define WIFI_PASSWORD "4815162342"
+int Photorezist=A0;//Фоторезистор
+int Lampa=D8; // Лампа фоторезистора
+int pinSoilMoisture=D2; // Почва
+int pinDHT11=D7; // влажность воздуха DHT11
+// создание экземпляра объекта DHT
+DHT dht(pinDHT11, DHTTYPE);
+// создаём объект для работы с библиотекой OneWire
+OneWire oneWire(ONE_WIRE_BUS);
+// создадим объект для работы с библиотекой DallasTemperature
+DallasTemperature sensor(&oneWire);
+void setup() {
+  Serial.begin(9600);
+  sensor.begin();
+  // устанавливаем разрешение датчика от 9 до 12 бит
+  sensor.setResolution(12);
+  // connect to wifi.
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("connecting");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500); 
+  }
+  Serial.println();
+  Serial.print("connected: ");
+  Serial.println(WiFi.localIP());
+  //лампа
+  pinMode(Lampa, OUTPUT); 
+  //почва
+  pinMode(pinSoilMoisture, INPUT);
+  //насос
+  pinMode(D4, OUTPUT);
+  //окно
+  pinMode(D0, OUTPUT);
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+  dht.begin();
+}
+void loop() 
+{
+ //это фоторезистор 
+int ant=analogRead(Photorezist);
+Firebase.setFloat("Osveshennost", ant );
+Serial.print("Освещённость:"); 
+Serial.println(ant);
+delay(1000);
+//лампа автоматика и и отключение автоматики
+if ((analogRead(Photorezist) < 800) and (Firebase.getString("LampaOnOff") == "2") )
+digitalWrite(D8, HIGH);
+else  if ((analogRead(Photorezist) < 800))
+digitalWrite(D8, LOW);
+else if ((analogRead(Photorezist) > 800) and (Firebase.getString("LampaOnOff") == "0") )
+digitalWrite(D8, HIGH); 
+else if ((analogRead(Photorezist) > 800) and (Firebase.getString("LampaOnOff") == "1") )
+digitalWrite(D8, LOW);
+// получение данных с влажность воздуха DHT11
+  float h = dht.readHumidity();
+  Serial.print("Влажность воздуха: ");
+  Firebase.setFloat("VlazhnostVozdukha", h );
+  Serial.println(h);
+  delay(1000);
+ // WindowOnOFF
+if ((h < 40) and (Firebase.getString("WindowOnOFF") == "0"))
+digitalWrite(D0, LOW);
+else   if (((h < 40)) and (Firebase.getString("WindowOnOFF") == "1"))
+digitalWrite(D0,  HIGH);
+else  if ((h > 50) and (Firebase.getString("WindowOnOFF") == "1"))
+digitalWrite(D0, HIGH);
+else  if ((h > 50) and (Firebase.getString("WindowOnOFF") == "0"))
+digitalWrite(D0, HIGH);
+else  if ((h > 50) and (Firebase.getString("WindowOnOFF") == "2"))
+digitalWrite(D0, LOW); 
+ // Температура в теплице
+int temperature;
+// отправляем запрос на измерение температуры
+sensor.requestTemperatures();
+// считываем данные из регистра датчика
+temperature = sensor.getTempCByIndex(0);
+// выводим температуру в Serial-порт
+Serial.print("Температура в теплице C: ");
+Firebase.setFloat("Temp C", temperature );
+Serial.println(temperature);
+delay(1000);
+  //почва 
+int val0=digitalRead(pinSoilMoisture);
+if ((digitalRead(pinSoilMoisture) == 1))
+Serial.print("Влажность почвы сухая: "), Serial.println(val0);
+else if ((digitalRead(pinSoilMoisture) == 0))
+Serial.print("Влажность почвы влажная: "),Serial.println(val0);
+Firebase.setFloat("VlazhnostPochvu",val0);
+delay(1000);
+//насос
+ if ((digitalRead(pinSoilMoisture) == 1) and (Firebase.getString("NasosOnOff") == "2"))
+digitalWrite(D4, LOW);
+else if (digitalRead(pinSoilMoisture) == 1)
+digitalWrite(D4, HIGH);
+else if ((digitalRead(pinSoilMoisture) == 0) and (Firebase.getString("NasosOnOff") == "0") )
+digitalWrite(D4, LOW);
+else if ((digitalRead(pinSoilMoisture) == 0) and (Firebase.getString("NasosOnOff") == "1") )
+digitalWrite(D4, HIGH);
+}
